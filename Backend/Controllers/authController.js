@@ -5,7 +5,7 @@ import User from '../Models/userModel.js'
 
 const authController = {
     signup: async (req,res)=>{
-        const {username,email,password} = req.body;
+        const {email,phoneNumber,password} = req.body;
         try{
             let user = await User.findOne({email});
             if (user){
@@ -13,8 +13,8 @@ const authController = {
             }
 
             user = new User({
-                username,
                 email,
+                phoneNumber,
                 password
             })
 
@@ -22,7 +22,16 @@ const authController = {
             user.password = await bcrypt.hash(password, salt);
 
             user.save()
-            return res.status(200).json({message:"User created successfully"});
+            // return res.status(200).json({message:"User created successfully"});
+            const jwt_payload = {
+                user:{
+                    id:user.id 
+                }
+            }
+            jwt.sign(jwt_payload,process.env.JWT_SECRET, {expiresIn:'1h'},(err,token)=>{
+                if (err) throw err;
+                return res.status(200).json({token})
+            });
         }catch (err){
             console.log(err.message);
             return res.status(500).send("Server Error");
@@ -31,9 +40,9 @@ const authController = {
 
     login: async (req,res)=>{
         try {
-            const {username,password} = req.body;
+            const {email,password} = req.body;
 
-            let user = await User.findOne({username})
+            let user = await User.findOne({email})
             if (!user){
                 return res.status(400).json({message:"User not found"})
             }
