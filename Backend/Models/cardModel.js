@@ -23,3 +23,4 @@ const cardSchema = new schema({
         required:true,
     }
 })
+
