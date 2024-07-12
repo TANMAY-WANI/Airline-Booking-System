@@ -97,15 +97,19 @@ export default function Header() {
     React.useEffect(()=>{
         if (localStorage.getItem("token")){
             setAuth(true);
+            const token ={"token": localStorage.getItem('token')}
+            axios.post("http://localhost:5001/auth/status",token)
+            .then((res)=>{
+                let {staff} = res.data;
+                setStaff(staff)
+            }).catch((err)=>{
+                console.log("Error, Token Expired!!");
+                localStorage.removeItem("token");
+                setAuth(false)
+            })
         }else{
             setAuth(false)
         }
-        const token ={"token": localStorage.getItem('token')}
-        axios.post("http://localhost:5001/auth/status",token)
-        .then((res)=>{
-            let {staff} = res.data;
-            setStaff(staff)
-        })
         
     },[])
     const handleLogout= ()=>{

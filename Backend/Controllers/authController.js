@@ -22,15 +22,13 @@ const authController = {
             user.password = await bcrypt.hash(password, salt);
 
             user.save()
-            // return res.status(200).json({message:"User created successfully"});
             const jwt_payload = {
                 user:{
                     id:user.id 
                 }
             }
             jwt.sign(jwt_payload,process.env.JWT_SECRET, {expiresIn:'1h'},(err,token)=>{
-                if (err) throw err;
-                // return res.status(200).json({token})
+                if (err) throw err
                 let response  = {
                     'token':token,
                     'staff':user.staff
@@ -79,13 +77,16 @@ const authController = {
         const {token} = req.body
         let userId = ""
         jwt.verify(token,process.env.JWT_SECRET,(err,decoded)=>{
-            if (err) throw err;
+            if (err) {
+                return res.status(400).json({"error":"Token expired"})
+            };
 
             // const {userId,iat,exp} = decoded
             userId = decoded['user']['id']
         })
 
         const user = await User.findOne({"_id":userId})
+        console.log(user);
         if (!user){
             return res.status(404).send("Invalid token")
         }
