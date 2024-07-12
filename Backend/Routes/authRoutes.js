@@ -14,6 +14,9 @@ router.post("/signup",authController.signup)
 // Login Route
 router.post("/login",authController.login)
 
+// check staff status
+router.post('/status',authController.status)
+
 
 export default router
 

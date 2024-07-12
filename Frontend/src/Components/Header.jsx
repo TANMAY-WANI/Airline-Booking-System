@@ -91,10 +91,8 @@ export default function Header() {
     const [open, setOpen] = React.useState(false);
     const [loginBox, setLoginBox] = React.useState(false);
     const [signupBox, setSignupBox] = React.useState(false);
+    const [staff, setStaff] = React.useState(false); 
 
-    const handleChange = (event) => {
-        setAuth(event.target.checked);
-    };
 
     React.useEffect(()=>{
         if (localStorage.getItem("token")){
@@ -102,7 +100,18 @@ export default function Header() {
         }else{
             setAuth(false)
         }
+        const token ={"token": localStorage.getItem('token')}
+        axios.post("http://localhost:5001/auth/status",token)
+        .then((res)=>{
+            let {staff} = res.data;
+            setStaff(staff)
+        })
+        
     },[])
+    const handleLogout= ()=>{
+        localStorage.removeItem("token")
+        location.reload()
+    }
 
     const [loginCredentials, setLoginCredentials] = React.useState({
         email: '',
@@ -134,6 +143,8 @@ export default function Header() {
         axios.post("http://localhost:5001/auth/signup",signupCredentials)   .then((res)=>{
             setAuth(true);
             setSignupBox(false)
+            // localStorage.setItem('staff',res.data['staff']);
+            setStaff(true)
             localStorage.setItem('token',res.data['token']);
             // navigate("/Home");
           }).catch((err)=>{
@@ -145,7 +156,10 @@ export default function Header() {
         // console.log(signupCredentials);
         axios.post("http://localhost:5001/auth/login",loginCredentials)   .then((res)=>{
             setAuth(true);
-            console.log(res.data);
+            // console.log(res.data['staff'])
+            if (res.data['staff']){
+                setStaff(true)
+            }
             setLoginBox(false)
             localStorage.setItem('token',res.data['token']);
             // navigate("/Home");
@@ -153,6 +167,30 @@ export default function Header() {
             console.log(err);
           });
     }
+
+    
+
+
+    const handleMyBookings = () => {
+        // Handle My Bookings action
+        console.log("My Bookings clicked");
+    };
+
+    const handleTransactionHistory = () => {
+        // Handle Transaction History action
+        console.log("Transaction History clicked");
+    };
+
+    const handleFlightAdmin = () => {
+        // Handle Flight Admin action
+        console.log("Flight Admin clicked");
+    };
+
+    const menuItems = [
+        { text: "My Bookings", action: handleMyBookings },
+        { text: "Transaction History", action: handleTransactionHistory },
+        { text: "Flight Admin", action: handleFlightAdmin, staffOnly: true },
+    ];
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -214,8 +252,8 @@ export default function Header() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleClose}>My account</MenuItem>
+                                <MenuItem onClick={handleClose}>My Account</MenuItem>
+                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                         </div>
                     )}
@@ -253,29 +291,22 @@ export default function Header() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {["All mail", "Trash", "Spam"].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                {menuItems.map((item, index) => {
+                if (item.staffOnly && !staff) {
+                    return null;
+                }
+
+                return (
+                    <ListItem key={item.text} disablePadding>
+                        <ListItemButton onClick={item.action}>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={item.text} />
+                        </ListItemButton>
+                    </ListItem>
+                );
+            })}
                 </List>
             </Drawer>
             <Modal

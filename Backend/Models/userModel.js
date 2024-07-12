@@ -19,6 +19,10 @@ const UserSchema = new schema({
     date:{
         type:Date,
         default:Date.now
+    },
+    staff:{
+        type:Boolean,
+        default:false
     }
 })
 

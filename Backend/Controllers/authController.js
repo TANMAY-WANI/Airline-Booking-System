@@ -30,7 +30,13 @@ const authController = {
             }
             jwt.sign(jwt_payload,process.env.JWT_SECRET, {expiresIn:'1h'},(err,token)=>{
                 if (err) throw err;
-                return res.status(200).json({token})
+                // return res.status(200).json({token})
+                let response  = {
+                    'token':token,
+                    'staff':user.staff
+                }
+                return res.status(200).send(response)
+                
             });
         }catch (err){
             console.log(err.message);
@@ -57,13 +63,36 @@ const authController = {
             }
             jwt.sign(jwt_payload,process.env.JWT_SECRET, {expiresIn:'1h'},(err,token)=>{
                 if (err) throw err;
-                return res.status(200).json({token})
+                let response  = {
+                    'token':token,
+                    'staff':user.staff
+                }
+                return res.status(200).send(response)
             });
             
         }  catch (err) {
             console.error(err.message);
             res.status(500).send('Server Error');
           }
+    },
+    status: async (req,res)=>{
+        const {token} = req.body
+        let userId = ""
+        jwt.verify(token,process.env.JWT_SECRET,(err,decoded)=>{
+            if (err) throw err;
+
+            // const {userId,iat,exp} = decoded
+            userId = decoded['user']['id']
+        })
+
+        const user = await User.findOne({"_id":userId})
+        if (!user){
+            return res.status(404).send("Invalid token")
+        }
+
+        
+        let staff = user.staff
+        res.status(200).json({staff})
     }
 }
 
