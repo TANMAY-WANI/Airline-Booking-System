@@ -28,25 +28,6 @@ import axios from 'axios'
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        flexGrow: 1,
-        padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: `-${drawerWidth}px`,
-        ...(open && {
-            transition: theme.transitions.create('margin', {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-            marginLeft: 0,
-        }),
-    }),
-);
-
 const style = {
     position: 'absolute',
     top: '50%',
@@ -61,20 +42,22 @@ const style = {
 
 const AppBarStyled = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+  })(({ theme, open }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: `${drawerWidth}px`,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     }),
-}));
+    zIndex: theme.zIndex.drawer + 1, // Add this line to ensure the AppBar is above the Drawer
+  }));
+  
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -84,7 +67,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-export default function Header() {
+export default function Header({children}) {
     const [auth, setAuth] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const theme = useTheme();
@@ -313,6 +296,10 @@ export default function Header() {
             })}
                 </List>
             </Drawer>
+            {/* <Main open={open}>
+        {/* <DrawerHeader /> */}
+        {/* {children} */}
+      {/* </Main> */} 
             <Modal
                 open={loginBox}
                 onClose={() => { setLoginBox(false) }}
@@ -404,9 +391,7 @@ export default function Header() {
                         </Button>
                     </form>
                 </Box>
-
             </Modal>
-
         </Box>
     );
 }
