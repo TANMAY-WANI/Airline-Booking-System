@@ -24,7 +24,8 @@ const authController = {
             user.save()
             const jwt_payload = {
                 user:{
-                    id:user.id 
+                    id:user.id,
+                    staff:user.staff
                 }
             }
             jwt.sign(jwt_payload,process.env.JWT_SECRET, {expiresIn:'1h'},(err,token)=>{
@@ -56,7 +57,8 @@ const authController = {
             }
             const jwt_payload = {
                 user:{
-                    id:user.id 
+                    id:user.id,
+                    staff:user.staff
                 }
             }
             jwt.sign(jwt_payload,process.env.JWT_SECRET, {expiresIn:'1h'},(err,token)=>{

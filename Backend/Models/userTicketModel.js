@@ -12,4 +12,4 @@ const bookedTicketSchema = new schema({
     }
 })
 
-export default BookedTicket = new mongoose.model("BookedTickets",bookedTicketSchema)
+export default  mongoose.model("BookedTickets",bookedTicketSchema)

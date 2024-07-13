@@ -2,19 +2,19 @@ import mongoose from "mongoose";
 const schema = mongoose.Schema;
 
 const FlightSchema = new schema({
-    source:{
+    src:{
         type:String,
         required:true,
     },
-    destination:{
+    dest:{
         type:String,
         required:true,
     },
-    departure_datetime:{
+    departure:{
         type:Date,
         required:true
     },
-    arival_datetime:{
+    arrival:{
         type:Date,
         required:true
     },
@@ -24,4 +24,4 @@ const FlightSchema = new schema({
     }    
 })
 
-export default Flight = new mongoose.model("Flights",FlightSchema)
+export default mongoose.model("Flights",FlightSchema)

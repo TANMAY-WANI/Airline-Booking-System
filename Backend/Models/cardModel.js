@@ -24,3 +24,4 @@ const cardSchema = new schema({
     }
 })
 
+export default mongoose.model("Cards",cardSchema)
