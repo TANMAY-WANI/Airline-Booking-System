@@ -17,15 +17,15 @@ const passengerSchema = new schema({
     gender: {
       type: String,
       required: true,
-    },
-    seatType:{
-        type:String,
-        required:true,
     }
   });
 
 const TicketSchema = new schema({
-    booking_email:{
+    userID:{
+        type:String,
+        required:true,
+    },
+    seatType:{
         type:String,
         required:true,
     },
@@ -34,10 +34,7 @@ const TicketSchema = new schema({
         type:String,
         required:true,
     },
-    cost:{
-        type:Number,
-        required:true,
-    }
+    createdAt: { type: Date, expires: '10m', default: Date.now }
 })
 
-export default mongoose.model("Ticket",TicketSchema)
+export default mongoose.model("tempBookings",TicketSchema)
