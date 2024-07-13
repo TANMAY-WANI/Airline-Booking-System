@@ -22,6 +22,19 @@ const serviceController = {
 
 
         return res.status(200).json({message:"Saved flight successfully"})
+    },
+    searchFlight: async (req,res)=>{
+        const{src,dest,date_of_travel} = req.body;
+        try{
+            const flights = await Flight.find({
+                "src":src,
+                "dest":dest,
+                "departure":date_of_travel
+            })
+            res.send(flights).status(200)
+        }catch(err){
+            return res.status(404).json({message:"No flights found"})
+        }
     }
 }
 

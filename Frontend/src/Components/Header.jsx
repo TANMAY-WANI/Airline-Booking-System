@@ -88,7 +88,7 @@ export default function Header({children}) {
             }).catch((err)=>{
                 console.log("Error, Token Expired!!");
                 localStorage.removeItem("token");
-                setAuth(false)
+                // location.reload()
             })
         }else{
             setAuth(false)
