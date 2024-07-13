@@ -21,7 +21,11 @@ const FlightSchema = new schema({
     noOfSeats:{
         type: mongoose.Schema.Types.Mixed, 
         required: true,
-    }    
+    },
+    price: {
+        Economy: Number,
+        Buisness: Number,
+    }
 })
 
 export default mongoose.model("Flights",FlightSchema)

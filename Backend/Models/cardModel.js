@@ -6,11 +6,11 @@ const cardSchema = new schema({
         type:String,
         required:true,
     },
-    cardNumber:{
+    card_number:{
         type:Number,
         required:true,
     },
-    cardHolder:{
+    holder_name:{
         type:String,
         required:true,
     },

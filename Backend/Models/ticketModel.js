@@ -17,15 +17,15 @@ const passengerSchema = new schema({
     gender: {
       type: String,
       required: true,
-    },
-    seatType:{
-        type:String,
-        required:true,
     }
   });
 
 const TicketSchema = new schema({
-    booking_email:{
+    userID:{
+        type:String,
+        required:true,
+    },
+    seatType:{
         type:String,
         required:true,
     },

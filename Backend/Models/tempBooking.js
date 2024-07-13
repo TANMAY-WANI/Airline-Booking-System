@@ -34,6 +34,10 @@ const TicketSchema = new schema({
         type:String,
         required:true,
     },
+    cost:{
+        type:Number,
+        required:true,
+    },
     createdAt: { type: Date, expires: '10m', default: Date.now }
 })
 

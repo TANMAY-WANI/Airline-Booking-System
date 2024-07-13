@@ -103,7 +103,7 @@ const authController = {
             console.log("Token Expired");
             return res.status(403).json({ error: 'Token expired' });
           }
-          console.error(err.message);
+          console.error(err.me);
           res.status(500).json({ error: 'Internal server error' });
         }      
 

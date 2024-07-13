@@ -6,7 +6,7 @@ import tempBooking from '../Models/tempBooking.js'
 
 const serviceController = {
     addFlight: async (req,res)=>{
-        const {src, dest, departure,arrival,eco,buisness} = req.body;
+        const {src, dest, departure,arrival,eco,buisness,price_eco,price_buisness} = req.body;
 
         const obj = {
             src,
@@ -16,6 +16,10 @@ const serviceController = {
             "noOfSeats":{
                 "Economy":eco,
                 "Buisness":buisness
+            },
+            "price":{
+                "Economy":price_eco,
+                "Buisness":price_buisness
             }
         }
 
@@ -52,11 +56,15 @@ const serviceController = {
             return res.status(401).json({message:"Seats unavailable"})
         }
         
+
+        let cost = passenger_details.length * flight.price[seatType]
+
         const temp = new tempBooking({
             userID,
             seatType,
             passenger_details,
-            flightID
+            flightID,
+            cost
         })
 
         await temp.save()

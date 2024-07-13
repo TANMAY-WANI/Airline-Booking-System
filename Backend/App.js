@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import authRoutes from './Routes/authRoutes.js'
 import serviceRoutes from "./Routes/serviceRoutes.js"
+import paymentRoutes from "./Routes/paymentRoutes.js"
 
 
 dotenv.config();
@@ -15,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth",authRoutes)
 app.use("/api",serviceRoutes)
-// app.use("/pay",paymentRoutes)
+app.use("/pay",paymentRoutes)
 
 
 mongoose.connect(process.env.MONGO_URI)
