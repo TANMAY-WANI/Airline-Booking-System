@@ -3,6 +3,7 @@ import Ticket from "../Models/ticketModel.js"
 import tempBooking from '../Models/tempBooking.js';
 import transactionModel from '../Models/transactionModel.js';
 import mongoose from 'mongoose';
+import flightModel from '../Models/flightModel.js';
 
 
 
@@ -30,16 +31,20 @@ const paymentController = {
             return res.status(404).json({ message: "Booking not found" });
         }
 
+        const flightInfo = await flightModel.findById(bookingInfo.flightID);
     
         const session = await mongoose.startSession();
         session.startTransaction();
     
         try {
+
+            if (flightInfo.noOfSeats[bookingInfo.seatType] < bookingInfo.passenger_details.length){
+                return res.status(403).json({message:"Not enough seats left"})
+            }
             const paymentStatus = await acceptPayment(bookingInfo.cost, cardDetails);
     
             if (paymentStatus) {
                 if (flag) {
-                    // The flag is for the user's choice to save his/her card for future transactions or not
                     const { card_number, holder_name, cvv, expiry } = cardDetails;
                     const card = new Card({
                         userID,

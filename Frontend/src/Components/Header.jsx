@@ -42,22 +42,22 @@ const style = {
 
 const AppBarStyled = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-  })(({ theme, open }) => ({
+})(({ theme, open }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
     }),
     zIndex: theme.zIndex.drawer + 1, // Add this line to ensure the AppBar is above the Drawer
-  }));
-  
+}));
+
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -67,35 +67,35 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-export default function Header({children}) {
+export default function Header({ children }) {
     const [auth, setAuth] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [loginBox, setLoginBox] = React.useState(false);
     const [signupBox, setSignupBox] = React.useState(false);
-    const [staff, setStaff] = React.useState(false); 
+    const [staff, setStaff] = React.useState(false);
 
 
-    React.useEffect(()=>{
-        if (localStorage.getItem("token")){
+    React.useEffect(() => {
+        if (localStorage.getItem("token")) {
             setAuth(true);
-            const token ={"token": localStorage.getItem('token')}
-            axios.post("http://localhost:5001/auth/status",token)
-            .then((res)=>{
-                let {staff} = res.data;
-                setStaff(staff)
-            }).catch((err)=>{
-                console.log("Error, Token Expired!!");
-                localStorage.removeItem("token");
-                // location.reload()
-            })
-        }else{
+            const token = { "token": localStorage.getItem('token') }
+            axios.post("http://localhost:5001/auth/status", token)
+                .then((res) => {
+                    let { staff } = res.data;
+                    setStaff(staff)
+                }).catch((err) => {
+                    console.log("Error, Token Expired!!");
+                    localStorage.removeItem("token");
+                    // location.reload()
+                })
+        } else {
             setAuth(false)
         }
-        
-    },[])
-    const handleLogout= ()=>{
+
+    }, [])
+    const handleLogout = () => {
         localStorage.removeItem("token")
         location.reload()
     }
@@ -114,7 +114,7 @@ export default function Header({children}) {
 
     const [signupCredentials, setSignupCredentials] = React.useState({
         email: '',
-        phoneNumber:'',
+        phoneNumber: '',
         password: '',
     });
     const handleSignup = (event) => {
@@ -125,37 +125,37 @@ export default function Header({children}) {
         }));
     };
 
-    const handleSignupSubmit = ()=>{
+    const handleSignupSubmit = () => {
         // console.log(signupCredentials);
-        axios.post("http://localhost:5001/auth/signup",signupCredentials)   .then((res)=>{
+        axios.post("http://localhost:5001/auth/signup", signupCredentials).then((res) => {
             setAuth(true);
             setSignupBox(false)
             // localStorage.setItem('staff',res.data['staff']);
             setStaff(true)
-            localStorage.setItem('token',res.data['token']);
+            localStorage.setItem('token', res.data['token']);
             // navigate("/Home");
-          }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
-          });
+        });
     }
 
-    const handleLoginSubmit = ()=>{
+    const handleLoginSubmit = () => {
         // console.log(signupCredentials);
-        axios.post("http://localhost:5001/auth/login",loginCredentials)   .then((res)=>{
+        axios.post("http://localhost:5001/auth/login", loginCredentials).then((res) => {
             setAuth(true);
             // console.log(res.data['staff'])
-            if (res.data['staff']){
+            if (res.data['staff']) {
                 setStaff(true)
             }
             setLoginBox(false)
-            localStorage.setItem('token',res.data['token']);
+            localStorage.setItem('token', res.data['token']);
             // navigate("/Home");
-          }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
-          });
+        });
     }
 
-    
+
 
 
     const handleMyBookings = () => {
@@ -278,28 +278,24 @@ export default function Header({children}) {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                {menuItems.map((item, index) => {
-                if (item.staffOnly && !staff) {
-                    return null;
-                }
+                    {menuItems.map((item, index) => {
+                        if (item.staffOnly && !staff) {
+                            return null;
+                        }
 
-                return (
-                    <ListItem key={item.text} disablePadding>
-                        <ListItemButton onClick={item.action}>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItemButton>
-                    </ListItem>
-                );
-            })}
+                        return (
+                            <ListItem key={item.text} disablePadding>
+                                <ListItemButton onClick={item.action}>
+                                    <ListItemIcon>
+                                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                    </ListItemIcon>
+                                    <ListItemText primary={item.text} />
+                                </ListItemButton>
+                            </ListItem>
+                        );
+                    })}
                 </List>
             </Drawer>
-            {/* <Main open={open}>
-        {/* <DrawerHeader /> */}
-        {/* {children} */}
-      {/* </Main> */} 
             <Modal
                 open={loginBox}
                 onClose={() => { setLoginBox(false) }}
@@ -347,7 +343,7 @@ export default function Header({children}) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                                <Box sx={style}>
+                <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         SignUp
                     </Typography>
@@ -364,17 +360,17 @@ export default function Header({children}) {
                             autoFocus
                             margin="normal"
                         />
-                               <TextField
-          id="phoneNumber"
-          label="Phone Number"
-          variant="outlined"
-          type="tel"
-          value={signupCredentials.phoneNumber}
-          onChange={handleSignup}
-          fullWidth
-          required
-          margin="normal"
-        />
+                        <TextField
+                            id="phoneNumber"
+                            label="Phone Number"
+                            variant="outlined"
+                            type="tel"
+                            value={signupCredentials.phoneNumber}
+                            onChange={handleSignup}
+                            fullWidth
+                            required
+                            margin="normal"
+                        />
                         <TextField
                             id="password"
                             label="Password"

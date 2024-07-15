@@ -23,8 +23,8 @@ const FlightSchema = new schema({
         required: true,
     },
     price: {
-        Economy: Number,
-        Buisness: Number,
+        type: mongoose.Schema.Types.Mixed, 
+        required: true,
     }
 })
 

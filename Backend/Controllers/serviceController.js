@@ -8,6 +8,7 @@ const serviceController = {
     addFlight: async (req,res)=>{
         const {src, dest, departure,arrival,eco,buisness,price_eco,price_buisness} = req.body;
 
+
         const obj = {
             src,
             dest,
@@ -29,19 +30,28 @@ const serviceController = {
 
         return res.status(200).json({message:"Saved flight successfully"})
     },
-    searchFlight: async (req,res)=>{
-        const{src,dest,date_of_travel} = req.body;
-        try{
+    searchFlight: async (req, res) => {
+        const { src, dest, date_of_travel } = req.body;
+    
+        const startDate = new Date(date_of_travel);
+        const endDate = new Date(new Date(date_of_travel).setHours(23, 59, 59, 999)); 
+        
+        try {
             const flights = await Flight.find({
-                "src":src,
-                "dest":dest,
-                "departure":date_of_travel
-            })
-            res.send(flights).status(200)
-        }catch(err){
-            return res.status(404).json({message:"No flights found"})
+                src: src,
+                dest: dest,
+                departure: {
+                    $gte: startDate,
+                    $lte: endDate
+                }
+            });
+            res.status(200).send(flights);
+        } catch (err) {
+            console.error('Error querying flights:', err);
+            res.status(404).json({ message: "No flights found" });
         }
     },
+    
     handleBooking: async (req,res)=>{
         const userID = req.user.id;
         const {passenger_details,flightID,seatType} = req.body;
