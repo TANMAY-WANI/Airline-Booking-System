@@ -11,7 +11,7 @@ const FlightDetails = ({ flights }) => {
   const handleBookFlight = (flight) => {
     // Implement booking logic here
     console.log(`Booking flight ${flight._id} - Seat: ${selectedSeat}`);
-    navigate("/add-passengers",{state:{flightID:flight._id,seat:selectedSeat}})
+    navigate("/add-passengers",{state:{flight:flight}})
 
   };
 
