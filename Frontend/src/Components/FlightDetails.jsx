@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FlightDetails = ({ flights }) => {
   const [selectedSeat, setSelectedSeat] = useState('Economy');
-
+  const navigate = useNavigate();
   const handleSeatChange = (seat) => {
     setSelectedSeat(seat);
   };
@@ -10,6 +11,8 @@ const FlightDetails = ({ flights }) => {
   const handleBookFlight = (flight) => {
     // Implement booking logic here
     console.log(`Booking flight ${flight._id} - Seat: ${selectedSeat}`);
+    navigate("/add-passengers",{state:{flightID:flight._id,seat:selectedSeat}})
+
   };
 
   return (

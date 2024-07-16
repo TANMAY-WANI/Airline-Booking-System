@@ -80,16 +80,18 @@ export default function Header({ children }) {
     React.useEffect(() => {
         if (localStorage.getItem("token")) {
             setAuth(true);
-            const token = { "token": localStorage.getItem('token') }
-            axios.post("http://localhost:5001/auth/status", token)
-                .then((res) => {
-                    let { staff } = res.data;
-                    setStaff(staff)
-                }).catch((err) => {
-                    console.log("Error, Token Expired!!");
-                    localStorage.removeItem("token");
-                    // location.reload()
-                })
+            const staff = localStorage.getItem("staff")
+            setStaff(staff)
+            // const token = { "token": localStorage.getItem('token') }
+            // axios.post("http://localhost:5001/auth/status", token)
+            //     .then((res) => {
+            //         let { staff } = res.data;
+            //         setStaff(staff)
+            //     }).catch((err) => {
+            //         console.log("Error, Token Expired!!");
+            //         localStorage.removeItem("token");
+            //         // location.reload()
+            //     })
         } else {
             setAuth(false)
         }
@@ -126,30 +128,20 @@ export default function Header({ children }) {
     };
 
     const handleSignupSubmit = () => {
-        // console.log(signupCredentials);
         axios.post("http://localhost:5001/auth/signup", signupCredentials).then((res) => {
-            setAuth(true);
-            setSignupBox(false)
-            // localStorage.setItem('staff',res.data['staff']);
-            setStaff(true)
             localStorage.setItem('token', res.data['token']);
-            // navigate("/Home");
+            localStorage.setItem("staff",res.data['staff'])
+            location.reload();
         }).catch((err) => {
             console.log(err);
         });
     }
 
     const handleLoginSubmit = () => {
-        // console.log(signupCredentials);
         axios.post("http://localhost:5001/auth/login", loginCredentials).then((res) => {
-            setAuth(true);
-            // console.log(res.data['staff'])
-            if (res.data['staff']) {
-                setStaff(true)
-            }
-            setLoginBox(false)
             localStorage.setItem('token', res.data['token']);
-            // navigate("/Home");
+            localStorage.setItem("staff",res.data['staff'])
+            location.reload();
         }).catch((err) => {
             console.log(err);
         });

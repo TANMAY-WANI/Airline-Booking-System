@@ -10,6 +10,7 @@ const SearchFlights = () => {
   const [flights,setFlights] = useState([])
 
   const handleSearch = () => {
+    event.preventDefault()
     const obj = {
       src,
       dest,

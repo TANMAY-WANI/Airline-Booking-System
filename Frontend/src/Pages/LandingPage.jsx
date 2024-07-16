@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Components/Header'
+import Layout from '../Components/Layout';
 import { useNavigate } from 'react-router-dom'
 import Alert from '@mui/material/Alert';
 
@@ -29,7 +30,7 @@ const LandingPage = () => {
   return (
     <>
       <Header />
-      <div className="mt-14 py-4  bg-cover bg-center bg-no-repeat h-[93vh] w-full" style={{ backgroundImage: `url(${img})` }}>
+      <Layout style = {{backgroundImage: `url(${img})`}}>
           {
             alertBox && <Alert severity="info">Kindly login to book your flights</Alert>
           }
@@ -43,8 +44,7 @@ const LandingPage = () => {
           onClick={handleSearchFlight}/>
 
         </div>
-
-      </div>
+        </Layout>
 
     </>
   )
