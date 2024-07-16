@@ -56,19 +56,30 @@ const serviceController = {
         const userID = req.user.id;
         const {passenger_details,flightID} = req.body;
 
+        console.log(passenger_details);
         const flight = await Flight.findOne({"_id":flightID})
 
         if (!flight){
             return res.status(404).json({message:"Flight not found"})
         }
 
-        if (flight.noOfSeats[seatType] < passenger_details.length){
+        let eco = 0,business = 0;
+
+        for (const pass of passenger_details){
+            if (pass['seatType']=="Economy"){
+                eco++;
+            }else{
+                business++;
+            }
+        }
+
+        if (flight.noOfSeats["Economy"] < eco || flight.noOfSeats["Buisness"]<business){
             return res.status(401).json({message:"Seats unavailable"})
         }
         
-        let cost;
+        let cost=0;
 
-        for (const passenger in passenger_details){
+        for (const passenger of passenger_details){
             const seatType = passenger.seatType;
             cost+=flight.price[seatType]
         }
