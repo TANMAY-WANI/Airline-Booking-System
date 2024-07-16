@@ -17,6 +17,10 @@ const passengerSchema = new schema({
     gender: {
       type: String,
       required: true,
+    },
+    seatType:{
+        type:String,
+        required:true
     }
   });
 

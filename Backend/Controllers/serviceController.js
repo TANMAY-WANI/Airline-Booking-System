@@ -54,7 +54,7 @@ const serviceController = {
     
     handleBooking: async (req,res)=>{
         const userID = req.user.id;
-        const {passenger_details,flightID,seatType} = req.body;
+        const {passenger_details,flightID} = req.body;
 
         const flight = await Flight.findOne({"_id":flightID})
 
@@ -66,12 +66,17 @@ const serviceController = {
             return res.status(401).json({message:"Seats unavailable"})
         }
         
+        let cost;
 
-        let cost = passenger_details.length * flight.price[seatType]
+        for (const passenger in passenger_details){
+            const seatType = passenger.seatType;
+            cost+=flight.price[seatType]
+        }
+
+        // console.log(cost);
 
         const temp = new tempBooking({
             userID,
-            seatType,
             passenger_details,
             flightID,
             cost
