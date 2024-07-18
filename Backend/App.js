@@ -5,8 +5,8 @@ import mongoose from 'mongoose'
 import authRoutes from './Routes/authRoutes.js'
 import serviceRoutes from "./Routes/serviceRoutes.js"
 import paymentRoutes from "./Routes/paymentRoutes.js"
-import deleteCompletedFlights from './Tasks/deleteFlights.js'
 import cron from 'node-cron'
+import deleteExpiry from './Tasks/deleteExpired.js'
 
 
 dotenv.config();
@@ -36,5 +36,5 @@ app.listen(PORT, () => {
 
 
 cron.schedule('0 0 * * *', () => {
-    deleteCompletedFlights();
+    deleteExpiry();
   });
