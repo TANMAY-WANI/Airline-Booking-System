@@ -19,22 +19,29 @@ const Payments = () => {
   const [bookingDetails, setBookingDetails] = useState(null);
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
-      navigate("/");
+    if (!localStorage.getItem("token")) {
+        navigate("/");
     } else {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const tokenParts = token.split('.');
-        const payload = JSON.parse(atob(tokenParts[1]));
-        const tokenExp = payload.exp * 1000;
-        const isTokenExpired = Date.now() > tokenExp;
-
-        if (isTokenExpired) {
-          localStorage.removeItem('token');
-          location.reload();
-          console.log('Token expired and removed from localStorage.');
+        const token = localStorage.getItem('token');
+        if (token) {
+            let isTokenExpired = false;
+            try {
+                const tokenParts = token.split('.');
+                if (tokenParts.length !== 3) {
+                    throw new Error("Invalid token format");
+                }
+                const payload = JSON.parse(atob(tokenParts[1]));
+                const tokenExp = payload.exp * 1000;
+                isTokenExpired = Date.now() > tokenExp;
+            } catch (error) {
+                localStorage.removeItem("token");
+                location.reload();
+            }
+            if (isTokenExpired) {
+                localStorage.removeItem('token');
+                location.reload();
+            }
         }
-      }
     }
 
     if (location.state && location.state.tempId && location.state.cost && location.state.noOfPassengers && location.state.flight) {
@@ -92,7 +99,7 @@ const Payments = () => {
       };
     axios.post("http://localhost:5001/pay/bookings/pay-now",obj,{headers})
     .then((res)=>{
-        console.log(res.data)
+        navigate("/tickets",{state:{flight:flight,ticket:res.data}})
     }).catch((err)=>{
         console.log(err);
     })
