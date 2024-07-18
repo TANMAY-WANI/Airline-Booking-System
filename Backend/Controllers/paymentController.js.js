@@ -13,8 +13,7 @@ const acceptPayment = async (amount,card_details)=>{
 const paymentController = {
     checkSavedCard: async (req,res)=>{
         const userID = req.user.id;
-        const card = Card.findOne({userID})
-
+        const card = await Card.findOne({userID})
         if (!card){
             return res.status(404).json({message:"Card not found"})
         }
@@ -31,18 +30,25 @@ const paymentController = {
             return res.status(404).json({ message: "Booking not found" });
         }
 
+
+
         const flightInfo = await flightModel.findById(bookingInfo.flightID);
     
+
         const session = await mongoose.startSession();
         session.startTransaction();
     
         try {
 
+
             if (flightInfo.noOfSeats[bookingInfo.seatType] < bookingInfo.passenger_details.length){
                 return res.status(403).json({message:"Not enough seats left"})
             }
+
+
             const paymentStatus = await acceptPayment(bookingInfo.cost, cardDetails);
-    
+            
+
             if (paymentStatus) {
                 if (flag) {
                     const { card_number, holder_name, cvv, expiry } = cardDetails;
@@ -56,7 +62,7 @@ const paymentController = {
     
                     await card.save({ session });
                 }
-    
+
                 const ticketData = {
                     userID: bookingInfo.userID,
                     seatType: bookingInfo.seatType,
@@ -64,10 +70,14 @@ const paymentController = {
                     flightID: bookingInfo.flightID,
                     cost: bookingInfo.cost,
                 };
+
                 
                 const ticket = new Ticket(ticketData);
-                const savedTicket = await ticket.save({ session });
+
+                const savedTicket = await ticket.save({session});
+
                 const ticketID = savedTicket._id;
+
     
                 const transaction = new transactionModel({
                     userID,
@@ -82,9 +92,6 @@ const paymentController = {
                 await session.commitTransaction();
                 session.endSession();
     
-                // Remove tempBooking after successful transaction
-                // await tempBooking.deleteOne({ "_id": tempBookingID });
-    
                 return res.status(200).send(savedTicket);
             } else {
                 await session.abortTransaction();
@@ -94,7 +101,7 @@ const paymentController = {
         } catch (err) {
             await session.abortTransaction();
             session.endSession();
-            return res.status(500).json({ error: err.message });
+            return res.status(400).json({ message: err.message });
         }
     }
     

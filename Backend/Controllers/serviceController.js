@@ -58,7 +58,7 @@ const serviceController = {
 
         console.log(passenger_details);
         const flight = await Flight.findOne({"_id":flightID})
-
+        console.log(flight);
         if (!flight){
             return res.status(404).json({message:"Flight not found"})
         }
@@ -72,19 +72,22 @@ const serviceController = {
                 business++;
             }
         }
+        // console.log();
 
         if (flight.noOfSeats["Economy"] < eco || flight.noOfSeats["Buisness"]<business){
             return res.status(401).json({message:"Seats unavailable"})
         }
         
         let cost=0;
+        console.log(cost);
 
         for (const passenger of passenger_details){
             const seatType = passenger.seatType;
+            console.log(seatType);
             cost+=flight.price[seatType]
         }
 
-        // console.log(cost);
+        console.log(cost);
 
         const temp = new tempBooking({
             userID,
@@ -94,7 +97,7 @@ const serviceController = {
         })
 
         await temp.save()
-        return res.status(200).json({tempId:temp._id})
+        return res.status(200).json({tempId:temp._id,cost:cost})
     }
 }
 

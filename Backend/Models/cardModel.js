@@ -19,7 +19,7 @@ const cardSchema = new schema({
         required:true,
     },
     expiry:{
-        type:Date,
+        type:String,
         required:true,
     }
 })

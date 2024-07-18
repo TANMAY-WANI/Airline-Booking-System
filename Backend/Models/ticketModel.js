@@ -29,10 +29,6 @@ const TicketSchema = new schema({
         type:String,
         required:true,
     },
-    seatType:{
-        type:String,
-        required:true,
-    },
     passenger_details:[passengerSchema],
     flightID: {
         type:String,
