@@ -14,7 +14,8 @@ const SearchFlights = () => {
   
       if (isTokenExpired) {
         localStorage.removeItem('token');
-        navigate("/")
+        localStorage.removeItem("staff")
+        location.reload()
         console.log('Token expired and removed from localStorage.');
       }
     }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -89,6 +90,7 @@ export default function Header({ children }) {
     }, [])
     const handleLogout = () => {
         localStorage.removeItem("token")
+        localStorage.removeItem("staff")
         location.reload()
     }
 
@@ -139,6 +141,7 @@ export default function Header({ children }) {
 
 
 
+    const navigate = useNavigate()
 
     const handleMyBookings = () => {
         // Handle My Bookings action
@@ -150,8 +153,10 @@ export default function Header({ children }) {
         console.log("Transaction History clicked");
     };
 
+
     const handleFlightAdmin = () => {
         // Handle Flight Admin action
+        navigate("/addFlights")
         console.log("Flight Admin clicked");
     };
 

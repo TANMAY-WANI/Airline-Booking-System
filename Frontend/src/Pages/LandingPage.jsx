@@ -18,7 +18,8 @@ useEffect(()=>{
 
     if (isTokenExpired) {
       localStorage.removeItem('token');
-      navigate("/")
+      localStorage.removeItem("staff")
+      location.reload()
       console.log('Token expired and removed from localStorage.');
     }
   }
@@ -46,7 +47,7 @@ useEffect(()=>{
       <Header />
       <Layout style = {{backgroundImage: `url(${img})`}}>
           {
-            alertBox && <Alert severity="info">Kindly login to book your flights</Alert>
+            alertBox && <Alert severity="error">Kindly login to book your flights</Alert>
           }
         <div style={{
           marginTop: "25%",

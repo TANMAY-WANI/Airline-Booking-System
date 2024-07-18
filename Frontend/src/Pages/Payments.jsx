@@ -19,9 +19,7 @@ const Payments = () => {
   const [bookingDetails, setBookingDetails] = useState(null);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-        navigate("/");
-    } else {
+
         const token = localStorage.getItem('token');
         if (token) {
             let isTokenExpired = false;
@@ -35,13 +33,15 @@ const Payments = () => {
                 isTokenExpired = Date.now() > tokenExp;
             } catch (error) {
                 localStorage.removeItem("token");
+                localStorage.removeItem("staff")
                 location.reload();
             }
             if (isTokenExpired) {
                 localStorage.removeItem('token');
+                localStorage.removeItem("staff")
                 location.reload();
             }
-        }
+        
     }
 
     if (location.state && location.state.tempId && location.state.cost && location.state.noOfPassengers && location.state.flight) {
