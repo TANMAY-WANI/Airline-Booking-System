@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken'
-import User from '../Models/userModel.js'
 import Flight from "../Models/flightModel.js"
 import tempBooking from '../Models/tempBooking.js'
 import transactionModel from '../Models/transactionModel.js'
@@ -109,11 +107,20 @@ const serviceController = {
     },
     getBookings: async(req,res)=>{
         const userID = req.user.id;
-        const ticketDetails = ticketModel.find({userID})
+        const ticketDetails = await ticketModel.find({userID})
         if (!ticketDetails){
             return res.status(404).json({message:"No bookings found"})
         }
         return res.status(200).send(ticketDetails)
+    },
+    getFlightDetails: async (req,res)=>{
+        const {flightID} = req.body;
+        console.log("hi");
+        const flight = await Flight.findById(flightID)
+        if (!flight){
+            return res.status(400).json({message:"No flight found"})
+        }
+        return res.status(200).send(flight)
     }
 }
 
