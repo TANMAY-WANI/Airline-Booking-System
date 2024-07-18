@@ -5,6 +5,8 @@ import Payments from "./Pages/Payments"
 import Ticket from "./Pages/Ticket"
 import AddFlights from "./Pages/AddFlights"
 import PrivateRoute from "./Components/PrivateRoute"
+import UserBookings from "./Pages/UserBookings"
+import UserTransactions from "./Pages/UserTransactions"
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
         <Route path="/add-passengers" element={<PrivateRoute element={<AddPassengers />} />} />
         <Route path="/payments" element={<PrivateRoute element={<Payments />} />} />
         <Route path="/tickets" element={<PrivateRoute element={<Ticket />} />} />
+        <Route path="/user-bookings" element={<PrivateRoute element={<UserBookings />} />} />
+        <Route path="/user-transactions" element={<PrivateRoute element={<UserTransactions />} />} />
         <Route path="/addFlights" element={<PrivateRoute element={<AddFlights />} requiredRole="staff" />} />
         <Route path="*" element={<PrivateRoute element={<div />} urlType = "Error"/>} />
       </Routes>

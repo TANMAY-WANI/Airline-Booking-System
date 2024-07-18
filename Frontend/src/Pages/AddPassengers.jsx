@@ -3,6 +3,7 @@ import Header from '../Components/Header';
 import Layout from '../Components/Layout';
 import { Button, TextField, MenuItem, Select, FormControl, InputLabel, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { Alert } from '@mui/material';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ const AddPassengers = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [flight, setFlight] = useState(null);
+  const [isBookingFailed, setBookingFailed] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -79,18 +81,21 @@ const AddPassengers = () => {
         };
         navigate("/payments", { state: state });
       }).catch((err) => {
-        console.log(err.message);
+        setBookingFailed(true)
       });
   };
 
   if (!flight) {
-    return null; // Or a loading spinner, or redirect logic if needed
+    return null; 
   }
 
   return (
     <>
       <Header />
       <Layout>
+        {
+          isBookingFailed && <Alert severity="error">There was some error is processing your request</Alert>
+        }
         <div className="w-full h-full min-h-screen p-6">
           <h1 className="text-4xl font-semibold mb-4">Flight Booking</h1>
           <div className="mb-4 flex justify-between">

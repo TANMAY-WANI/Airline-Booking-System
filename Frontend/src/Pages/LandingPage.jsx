@@ -20,7 +20,6 @@ useEffect(()=>{
       localStorage.removeItem('token');
       localStorage.removeItem("staff")
       location.reload()
-      console.log('Token expired and removed from localStorage.');
     }
   }
 },[])

@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Card, CardContent, Typography, Box, Divider, Button } from '@mui/material';
+import {Alert} from '@mui/material';
 
 const TicketDetails = ({ ticket, flight }) => {
+  const [isDownloadFailed, setDownloadFail] = useState(false)
   const ticketRef = useRef();
 
   const downloadPDF = () => {
@@ -19,12 +21,15 @@ const TicketDetails = ({ ticket, flight }) => {
         pdf.save('ticket.pdf');
       })
       .catch((err) => {
-        console.error('Error generating PDF', err);
+        setDownloadFail(true)
       });
   };
 
   return (
     <>
+      {
+        isDownloadFailed && <Alert severity="error">There was some error while downloading your pdf</Alert>
+      }
       <Card className="max-w-3xl mx-auto my-8 shadow-xl rounded-xl bg-white border border-gray-200">
         <CardContent ref={ticketRef}>
           <Box className="p-8">

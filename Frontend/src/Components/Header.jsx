@@ -25,6 +25,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import CssBaseline from '@mui/material/CssBaseline';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import { Alert } from '@mui/material';
 import axios from 'axios'
 
 const drawerWidth = 240;
@@ -76,6 +77,8 @@ export default function Header({ children }) {
     const [loginBox, setLoginBox] = React.useState(false);
     const [signupBox, setSignupBox] = React.useState(false);
     const [staff, setStaff] = React.useState(false);
+    const [isLoginFalied, setLoginFail] = React.useState(false)
+    const [isSignupFailed, setSignupFail] = React.useState(false)
 
 
     React.useEffect(() => {
@@ -122,20 +125,20 @@ export default function Header({ children }) {
     const handleSignupSubmit = () => {
         axios.post("http://localhost:5001/auth/signup", signupCredentials).then((res) => {
             localStorage.setItem('token', res.data['token']);
-            localStorage.setItem("staff",res.data['staff'])
+            localStorage.setItem("staff", res.data['staff'])
             location.reload();
         }).catch((err) => {
-            console.log(err);
+            setSignupFail(true)
         });
     }
 
     const handleLoginSubmit = () => {
         axios.post("http://localhost:5001/auth/login", loginCredentials).then((res) => {
             localStorage.setItem('token', res.data['token']);
-            localStorage.setItem("staff",res.data['staff'])
+            localStorage.setItem("staff", res.data['staff'])
             location.reload();
         }).catch((err) => {
-            console.log(err);
+            setLoginFail(true)
         });
     }
 
@@ -144,20 +147,16 @@ export default function Header({ children }) {
     const navigate = useNavigate()
 
     const handleMyBookings = () => {
-        // Handle My Bookings action
-        console.log("My Bookings clicked");
+        navigate("/user-bookings")
     };
 
     const handleTransactionHistory = () => {
-        // Handle Transaction History action
-        console.log("Transaction History clicked");
+        navigate("/user-transactions")
     };
 
 
     const handleFlightAdmin = () => {
-        // Handle Flight Admin action
         navigate("/addFlights")
-        console.log("Flight Admin clicked");
     };
 
     const menuItems = [
@@ -196,7 +195,7 @@ export default function Header({ children }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }} onClick={() => { navigate("/") }}>
                         FlightMaster
                     </Typography>
                     {auth && (
@@ -226,7 +225,6 @@ export default function Header({ children }) {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>My Account</MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                         </div>
@@ -289,7 +287,11 @@ export default function Header({ children }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
+
                 <Box sx={style}>
+                    {
+                        isLoginFalied && <Alert severity="error">Invalid Credentials</Alert>
+                    }
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Login
                     </Typography>
@@ -331,6 +333,9 @@ export default function Header({ children }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
+                    {
+                        isSignupFailed && <Alert severity="error">Invalid Credentials</Alert>
+                    }
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         SignUp
                     </Typography>

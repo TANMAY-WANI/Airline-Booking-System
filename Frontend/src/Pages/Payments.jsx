@@ -4,12 +4,14 @@ import Header from '../Components/Header';
 import TextField from '@mui/material/TextField';
 import { Box, Button, FormControlLabel, Checkbox } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {Alert} from '@mui/material';
 import axios from 'axios';
 
 const Payments = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [saveCard,setSaveCard] = useState(false)
+  const [isBookingFailed,setFalied] = useState(false)
   const [card, setCard] = useState({
     card_number: '',
     holder_name: '',
@@ -65,7 +67,7 @@ const Payments = () => {
         expiry: cardDetails.expiry || '',
       });
     }).catch((err) => {
-      console.log(err);
+      // do nothing
     });
   }, []);
 
@@ -92,7 +94,6 @@ const Payments = () => {
         "cardDetails":card,
         "flag":saveCard
     }
-    console.log(obj);
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -101,7 +102,8 @@ const Payments = () => {
     .then((res)=>{
         navigate("/tickets",{state:{flight:flight,ticket:res.data}})
     }).catch((err)=>{
-        console.log(err);
+        // console.log(err);
+        setFalied(true)
     })
 
   };
@@ -110,6 +112,9 @@ const Payments = () => {
     <>
       <Header />
       <Layout>
+      {
+          isBookingFailed && <Alert severity="error">There was some error is processing your request</Alert>
+        }
         <div className="w-full h-full min-h-screen p-6">
           <h1 className="text-2xl text-center font-semibold mb-4">Booking Summary</h1>
           <div className="mb-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-4 mx-auto max-w-4xl px-4 shadow-lg rounded-lg bg-white">
