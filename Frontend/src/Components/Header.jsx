@@ -82,16 +82,6 @@ export default function Header({ children }) {
             setAuth(true);
             const staff = localStorage.getItem("staff")
             setStaff(staff)
-            // const token = { "token": localStorage.getItem('token') }
-            // axios.post("http://localhost:5001/auth/status", token)
-            //     .then((res) => {
-            //         let { staff } = res.data;
-            //         setStaff(staff)
-            //     }).catch((err) => {
-            //         console.log("Error, Token Expired!!");
-            //         localStorage.removeItem("token");
-            //         // location.reload()
-            //     })
         } else {
             setAuth(false)
         }
