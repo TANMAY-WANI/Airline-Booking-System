@@ -5,31 +5,47 @@ import { Button, TextField, MenuItem, Select, FormControl, InputLabel, IconButto
 import AddIcon from '@mui/icons-material/Add';
 import 'tailwindcss/tailwind.css';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-
-// const flight = {
-//     _id:"1010",
-//   arrival: "2024-07-15T00:00:00.000Z",
-//   departure: "2024-07-15T00:00:00.000Z",
-//   dest: "Delhi",
-//   noOfSeats: { Economy: 100, Buisness: 50 },
-//   price: { Economy: 3000, Buisness: 9000 },
-//   src: "Mumbai",
-// };
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AddPassengers = () => {
-    const location = useLocation()
-    const {flight} = location.state;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [flight, setFlight] = useState(null);
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    } else {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const tokenParts = token.split('.');
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const tokenExp = payload.exp * 1000;
+        const isTokenExpired = Date.now() > tokenExp;
+
+        if (isTokenExpired) {
+          localStorage.removeItem('token');
+          location.reload();
+        }
+      }
+    }
+
+    if (location.state && location.state.flight) {
+      setFlight(location.state.flight);
+    } else {
+      navigate("/");
+    }
+  }, [location, navigate]);
 
   const [passengers, setPassengers] = useState([{ name: '', contact: '', age: '', gender: '', seatType: '' }]);
 
   const handleAddPassenger = () => {
-    setPassengers([...passengers, { name: '', contact: '', age: '',gender: '', seatType: '' }]);
+    setPassengers([...passengers, { name: '', contact: '', age: '', gender: '', seatType: '' }]);
   };
 
   const handlePassengerChange = (index, event) => {
     const newPassengers = passengers.map((passenger, i) => {
-      if (i === index) { 
+      if (i === index) {
         return { ...passenger, [event.target.name]: event.target.value };
       }
       return passenger;
@@ -37,23 +53,34 @@ const AddPassengers = () => {
     setPassengers(newPassengers);
   };
 
-  const proceedToPay = ()=>{
-    // console.log(passengers.length);
+  const proceedToPay = () => {
+    const noOfPassengers = passengers.length;
     const obj = {
-        "passenger_details":passengers,
-        "flightID":flight._id
-    }
+      "passenger_details": passengers,
+      "flightID": flight._id
+    };
     const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`,
-      };
-    axios.post("http://localhost:5001/api/bookings/proceed-to-pay",obj,{headers})
-    .then((res)=>{
-        localStorage.setItem("temp_bookingID",res.data['tempId']);
-    }).catch((err)=>{
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("token")}`,
+    };
+    axios.post("http://localhost:5001/api/bookings/proceed-to-pay", obj, { headers })
+      .then((res) => {
+        const state = {
+          'tempId': res.data["tempId"],
+          "cost": res.data["cost"],
+          "noOfPassengers": noOfPassengers,
+          "flight": flight
+        };
+        navigate("/payments", { state: state });
+      }).catch((err) => {
         console.log(err.message);
-    })
+      });
+  };
+
+  if (!flight) {
+    return null; // Or a loading spinner, or redirect logic if needed
   }
+
   return (
     <>
       <Header />
@@ -113,7 +140,7 @@ const AddPassengers = () => {
                     onChange={(e) => handlePassengerChange(index, e)}
                   >
                     <MenuItem value="Economy">Economy - ₹{flight.price.Economy}/-</MenuItem>
-                    <MenuItem value="Business">Business - ₹{flight.price.Buisness}/-</MenuItem>
+                    <MenuItem value="Buisness">Business - ₹{flight.price.Buisness}/-</MenuItem>
                   </Select>
                 </FormControl>
               </form>
@@ -124,7 +151,7 @@ const AddPassengers = () => {
             <IconButton onClick={handleAddPassenger} color="primary">
               <AddIcon />
             </IconButton>
-            <Button variant="contained" color="primary" onClick={proceedToPay}> 
+            <Button variant="contained" color="primary" onClick={proceedToPay}>
               Proceed to Pay
             </Button>
           </div>

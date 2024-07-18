@@ -1,8 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Header from '../Components/Header'
 import FlightDetails from '../Components/FlightDetails'
 import axios from 'axios'
 const SearchFlights = () => {
+
+  useEffect(()=>{
+    const token = localStorage.getItem('token');
+    if (token) {
+      const tokenParts = token.split('.');
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const tokenExp = payload.exp * 1000;
+      const isTokenExpired = Date.now() > tokenExp;
+  
+      if (isTokenExpired) {
+        localStorage.removeItem('token');
+        navigate("/")
+        console.log('Token expired and removed from localStorage.');
+      }
+    }
+  },[])
 
   const [src,setSrc] = useState("")
   const [dest,setDest] = useState("")
@@ -10,6 +26,7 @@ const SearchFlights = () => {
   const [flights,setFlights] = useState([])
 
   const handleSearch = () => {
+    
     event.preventDefault()
     const obj = {
       src,

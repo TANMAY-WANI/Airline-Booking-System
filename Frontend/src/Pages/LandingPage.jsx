@@ -8,7 +8,21 @@ const LandingPage = () => {
   const img = "Images/airplane.jpg"
   const navigate = useNavigate()
   const [alertBox,setAlert] = useState(false);
+useEffect(()=>{
+  const token = localStorage.getItem('token');
+  if (token) {
+    const tokenParts = token.split('.');
+    const payload = JSON.parse(atob(tokenParts[1]));
+    const tokenExp = payload.exp * 1000;
+    const isTokenExpired = Date.now() > tokenExp;
 
+    if (isTokenExpired) {
+      localStorage.removeItem('token');
+      navigate("/")
+      console.log('Token expired and removed from localStorage.');
+    }
+  }
+},[])
   useEffect(()=>{
     let timer;
     if (alertBox){
