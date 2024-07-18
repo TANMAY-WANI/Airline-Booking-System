@@ -83,7 +83,7 @@ const paymentController = {
                     userID,
                     ticketID,
                     paymentMethod: "Card",
-                    paymentStatus: "Successful",
+                    paymentStatus: "Successfull",
                     amount: bookingInfo.cost
                 });
     

@@ -18,4 +18,7 @@ router.get("/bookings/display",authMiddleware.verifyUser,serviceController.getBo
 
 router.get("/view-transactions",authMiddleware.verifyUser,serviceController.getTransactions)
 
+router.post("/flights/searchByID",authMiddleware.verifyUser,serviceController.getFlightDetails)
+
+
 export default router
