@@ -18,6 +18,7 @@ function App() {
         <Route path="/payments" element={<PrivateRoute element={<Payments />} />} />
         <Route path="/tickets" element={<PrivateRoute element={<Ticket />} />} />
         <Route path="/addFlights" element={<PrivateRoute element={<AddFlights />} requiredRole="staff" />} />
+        <Route path="*" element={<PrivateRoute element={<div />} urlType = "Error"/>} />
       </Routes>
     </Router>
   </>
