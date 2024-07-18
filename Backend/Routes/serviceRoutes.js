@@ -14,4 +14,8 @@ router.post('/flights/search',authMiddleware.verifyUser,serviceController.search
 
 router.post("/bookings/proceed-to-pay",authMiddleware.verifyUser,serviceController.handleBooking)
 
+router.get("/bookings/display",authMiddleware.verifyUser,serviceController.getBookings)
+
+router.get("/view-transactions",authMiddleware.verifyUser,serviceController.getTransactions)
+
 export default router
