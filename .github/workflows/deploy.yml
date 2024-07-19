@@ -30,11 +30,15 @@ jobs:
           sudo apt-get install -y awscli
           aws --version
 
-      - name: Test AWS CLI
+      - name: Test AWS CLI Configuration
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
+          echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
+          echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
           aws configure list
-          echo "AWS_ACCESS_KEY_ID is set to ${AWS_ACCESS_KEY_ID:-not_set}"
-          echo "AWS_SECRET_ACCESS_KEY is set to ${AWS_SECRET_ACCESS_KEY:-not_set}"
+          aws s3 ls || (echo "AWS CLI test failed" && exit 1)
 
       - name: Deploy to S3
         env:
@@ -93,5 +97,5 @@ jobs:
             echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             npm install
-            pm2 restart all || pm2 start app.js
+            pm2 restart all || pm2 start App.js
           EOF
