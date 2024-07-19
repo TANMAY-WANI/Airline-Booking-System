@@ -12,7 +12,7 @@ import deleteExpiry from './Tasks/deleteExpired.js'
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());

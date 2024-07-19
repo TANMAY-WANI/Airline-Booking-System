@@ -48,7 +48,7 @@ const FlightDetailsForm = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("token")}`,
     };
-    axios.post("http://localhost:5001/api/flights/add",flightDetails,{headers})
+    axios.post("http://13.126.141.148:5000/api/flights/add",flightDetails,{headers})
     .then((res)=>{
       setAlert(true);
     })
