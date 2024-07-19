@@ -28,11 +28,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
+          aws --version
 
       - name: Test AWS CLI
         run: |
-          aws --version
           aws configure list
+          echo "AWS_ACCESS_KEY_ID is set to ${AWS_ACCESS_KEY_ID:-not_set}"
+          echo "AWS_SECRET_ACCESS_KEY is set to ${AWS_SECRET_ACCESS_KEY:-not_set}"
 
       - name: Deploy to S3
         env:
@@ -69,6 +71,13 @@ jobs:
         run: |
           echo "Testing SSH connection"
           ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 $EC2_USER@$EC2_HOST "echo SSH connection successful"
+
+      - name: Ensure Backend Directory on EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 $EC2_USER@$EC2_HOST "mkdir -p ~/Backend"
 
       - name: Deploy to EC2
         env:
