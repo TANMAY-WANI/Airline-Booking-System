@@ -15,8 +15,11 @@ const app = express();
 const PORT = 5000;
 
 app.use(cors({
-    origin:"http://airline-booking-frontend.s3-website.ap-south-1.amazonaws.com",
-}));
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
+  
 app.use(express.json());
 app.use("/auth",authRoutes)
 app.use("/api",serviceRoutes)
