@@ -41,7 +41,7 @@ const SearchFlights = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     };
-    axios.post("http://13.126.141.148/api/flights/search", obj, { headers })
+    axios.post("http://65.1.136.63/api/flights/search", obj, { headers })
       .then((res) => {
         setFlights(res.data)
       }).catch((err) => {

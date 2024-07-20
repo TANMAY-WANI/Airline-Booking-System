@@ -35,7 +35,7 @@ const UserTransactions = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem("token")}`,
         };
-        axios.get("http://13.126.141.148/api/view-transactions", { headers })
+        axios.get("http://65.1.136.63/api/view-transactions", { headers })
             .then((res) => {
                 setTransactions(res.data)
             }).catch((err) => {

@@ -123,7 +123,7 @@ export default function Header({ children }) {
     };
 
     const handleSignupSubmit = () => {
-        axios.post("http://13.126.141.148/auth/signup", signupCredentials).then((res) => {
+        axios.post("http://65.1.136.63/auth/signup", signupCredentials).then((res) => {
             localStorage.setItem('token', res.data['token']);
             localStorage.setItem("staff", res.data['staff'])
             location.reload();
@@ -133,7 +133,7 @@ export default function Header({ children }) {
     }
 
     const handleLoginSubmit = () => {
-        axios.post("http://13.126.141.148/auth/login", loginCredentials).then((res) => {
+        axios.post("http://65.1.136.63s/auth/login", loginCredentials).then((res) => {
             localStorage.setItem('token', res.data['token']);
             localStorage.setItem("staff", res.data['staff'])
             location.reload();
