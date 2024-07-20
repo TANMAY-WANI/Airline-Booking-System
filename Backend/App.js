@@ -14,7 +14,9 @@ dotenv.config();
 const app = express();
 const PORT = 5000;
 
-app.use(cors());
+app.use(cors({
+    origin:"http://airline-booking-frontend.s3-website.ap-south-1.amazonaws.com",
+}));
 app.use(express.json());
 app.use("/auth",authRoutes)
 app.use("/api",serviceRoutes)
