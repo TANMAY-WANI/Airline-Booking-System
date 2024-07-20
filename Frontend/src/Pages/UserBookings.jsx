@@ -39,7 +39,7 @@ const UserBookings = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("token")}`,
     };
-    axios.get('http://13.126.141.148:5000/api/bookings/display', { headers })
+    axios.get('http://13.126.141.148/api/bookings/display', { headers })
       .then(response => {
         setBookings(response.data);
       })
@@ -61,7 +61,7 @@ const UserBookings = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("token")}`,
     };
-    axios.post("http://13.126.141.148:5000/api/flights/searchByID", obj, { headers })
+    axios.post("http://13.126.141.148/api/flights/searchByID", obj, { headers })
       .then((res) => {
         setFlightDetails(res.data);
         setOpen(true);

@@ -58,7 +58,7 @@ const Payments = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("token")}`,
     };
-    axios.get("http://13.126.141.148:5001/pay/get-card-details", { headers }).then((res) => {
+    axios.get("http://13.126.141.148/pay/get-card-details", { headers }).then((res) => {
       const cardDetails = res.data;
       setCard({
         card_number: cardDetails.card_number || '',
@@ -98,7 +98,7 @@ const Payments = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem("token")}`,
       };
-    axios.post("http://13.126.141.148:5000/pay/bookings/pay-now",obj,{headers})
+    axios.post("http://13.126.141.148/pay/bookings/pay-now",obj,{headers})
     .then((res)=>{
         navigate("/tickets",{state:{flight:flight,ticket:res.data}})
     }).catch((err)=>{
