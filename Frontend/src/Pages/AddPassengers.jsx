@@ -71,7 +71,7 @@ const AddPassengers = () => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem("token")}`,
     };
-    axios.post("http://13.126.141.148:5001/api/bookings/proceed-to-pay", obj, { headers })
+    axios.post("http://13.126.141.148:5000/api/bookings/proceed-to-pay", obj, { headers })
       .then((res) => {
         const state = {
           'tempId': res.data["tempId"],
